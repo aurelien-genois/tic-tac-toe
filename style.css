@@ -1,0 +1,48 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    /* 1rem = 16px, so when define at 62.5% 1rem = 10 px */
+    /* for responsive size, just change this font-size in media-query (for ex retina screen) */
+    font-size: 62.5%;
+}
+
+#game {
+    width: 40rem;
+    margin: 0 auto;
+}
+
+#title, #score, #game-board {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#score {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+}
+
+#score-display {
+    display: flex;
+    justify-content: center;
+}
+
+#game-board {
+    height: 30rem;
+    width: 30rem;
+    background-color: papayawhip;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.game-cells {
+    display: flex;
+    border: 0 solid green;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+}
