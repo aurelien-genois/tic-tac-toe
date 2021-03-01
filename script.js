@@ -3,42 +3,100 @@ const player = (name, marker) => {
     let _points = 0;
     const getName = () => name;
     const getMarker = () => marker;
-    const getPoints = () => points;
+    const getPoints = () => _points;
     const addPoints = () => {
         _points++;
     };
     return { getName, getMarker, getPoints, addPoints};
 }
 const player1 = player('Player 1', 'X');
-const player2 = player('Player 2', 'O');
-
-// need to bameBoard.setCell() for update the gameBoar arr (then watch it every play (clicked event) for declare winner or a tie (if array full and no winner))
-
-// modules and object methods can be called from other modules
+const player2 = player('Player 2', 'O'); // or AI
 
 // GameBoard
 const gameBoard = (() => {
-    let _arr = [['','',''],['','',''],['','','']];
+    let _arr = ['','','','','','','','',''];
     const getArr = () => _arr;
     const setCell = (cellIndex, cellValue) => {
-        if(cellIndex < 3) {
-            _arr[0][cellIndex] = cellValue;
-        } else if(cellIndex < 6) {
-            _arr[1][cellIndex - 3] = cellValue;
-        } else {
-            _arr[2][cellIndex - 6] = cellValue;
-        }
-        
+        _arr[cellIndex] = cellValue;  
     };
     const reset = () => {
-        _arr = [['','',''],['','',''],['','','']];
-    }
+        _arr = ['','','','','','','','',''];
+    };
 
     return { getArr, setCell, reset};
 })();
 
+// TODO module for AI
+
+// game play logic
+const playController = (() => {
+    let _player1plays = [];
+    let _player2plays = [];
+    let _turnCounter = 0;
+    let _isGameOver = false;
+    const _winStates = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+    ]; 
+    // deep comparison because arr.includes() only works for shallow comparison,
+    const _checkWin = (playerPlays, currentPlayer) => {
+        _isGameOver = _winStates.some(e => e.every(o => playerPlays.includes(o)));
+        if(gameBoard.getArr().every(x => x !== "") && !_isGameOver) {
+            _isGameOver = 'tie'; // truthy value
+        }
+        displayDOMController.displayResult(_isGameOver, currentPlayer);
+      };
+    
+    const _updateCell = (cell, currentPlayer, currentPlayerPlays) => {
+        cell.textContent = currentPlayer.getMarker();
+        gameBoard.setCell(cell.id, currentPlayer.getMarker())
+        currentPlayerPlays.push(+cell.id);
+        _checkWin(currentPlayerPlays.sort((a,b) => a - b), currentPlayer);
+    };
+    const checkCell = (e) => {
+        if(!e.target.textContent && !_isGameOver) { // if cell empty
+            if ((_turnCounter % 2) === 0) { // player1 turn
+                _updateCell(e.target,player1, _player1plays);
+            } else { // player2 turn
+                _updateCell(e.target,player2, _player2plays);
+            }
+            ++_turnCounter;
+        }
+    };
+    const newRound = () => {
+        gameBoard.reset();
+        displayDOMController.initGameBoardToDom();
+        _player1plays = [];
+        _player2plays = [];
+        _turnCounter = 0;
+        _isGameOver = false;
+    };
+
+    return {checkCell, newRound};
+})();
+
 // methods for display to the dom
 const displayDOMController = ((doc) => {
+    const _gameBoardGrid = doc.querySelector('#game-board');
+    const _winDescription = doc.querySelector('#win-description');
+    const _score1Text = doc.querySelector('#score1');
+    const _score2Text = doc.querySelector('#score2');
+    const _player1Text = doc.querySelector('#player1');
+    const _player2Text = doc.querySelector('#player2');
+    const _restartButton = doc.querySelector('#restart-button');
+    // Display name automatically at the initialisation
+    _score1Text.textContent = player1.getPoints();
+    _score2Text.textContent = player2.getPoints();
+    _player1Text.textContent = player1.getName();
+    _player2Text.textContent = player2.getName();
+    _restartButton.addEventListener('click', playController.newRound);
+    
     const _createCell = (id, content, colIndex, rowIndex) => {
         let cell = doc.createElement('p'); 
         cell.classList.add('game-cells');
@@ -46,78 +104,42 @@ const displayDOMController = ((doc) => {
         cell.style.gridColumn = colIndex;
         cell.style.gridRow = rowIndex;
         cell.textContent = content;
-        switch(id) {
-            case 0:
-                cell.style.borderWidth = '0 2px 2px 0';
-                break;
-            case 2:
-                cell.style.borderWidth = '0 0 2px 2px';
-                break;
-            case 4:
-                cell.style.outline = '2px solid green';
-                break;
-            case 6:
-                cell.style.borderWidth = '2px 2px 0 0';
-                break;
-            case 8:
-                cell.style.borderWidth = '2px 0 0 2px';
-                break;
-        }
         return cell;
-    }
-
-    const initGameBoardToDom = () => {
-        let gameBoardGrid = doc.querySelector('#game-board');
-        let cellId = 0;
-        gameBoard.getArr().map((x, xI) => {
-            x.map((y, yI) => {
-                let gameCell = _createCell(cellId++, y, yI+1, xI+1);
-                gameCell.addEventListener('mousedown', playController.checkCell);
-                gameBoardGrid.appendChild(gameCell);
-            })
-        })
-    }
-    // const getCells = () => doc.querySelectorAll('.game-cells');
-
-    const displayPlayersNames = () => {
-        const player1Text = doc.querySelector('#player1');
-        const player2Text = doc.querySelector('#player2');
-        player1Text.textContent = player1.getName();
-        player2Text.textContent = player2.getName();
     };
-    return { initGameBoardToDom, displayPlayersNames};
-})(document);
-
-// methods for game play
-const playController = (() => {
-    let _counter = 0;
-    const checkCell = (e) => {
-        if(!e.target.textContent) {
-            if ((_counter % 2) === 0) {
-                e.target.textContent = player1.getMarker();
-                gameBoard.setCell(e.target.id, player1.getMarker())
-            } else {
-                e.target.textContent = player2.getMarker();
-                gameBoard.setCell(e.target.id, player2.getMarker())
+    const initGameBoardToDom = () => {
+        let cellId = 0;
+        let cellColl = 1;
+        let cellRow = 1;
+        _winDescription.textContent = '';
+        while (_gameBoardGrid.firstChild) {    
+            _gameBoardGrid.removeChild(_gameBoardGrid.firstChild);
+        };
+        gameBoard.getArr().map((x, xI) => {
+            switch(xI) {
+                case 3:
+                case 6:
+                    cellColl = 1;
+                    ++cellRow;
+                    break;
             }
-            ++_counter;
+            let gameCell = _createCell(cellId++, x, cellColl++, cellRow);
+            gameCell.addEventListener('mousedown', playController.checkCell);
+            _gameBoardGrid.appendChild(gameCell);
+        })
+    };
+    initGameBoardToDom(); // first init
+
+    const displayResult = (gameOverCheck, player) => {
+        if(gameOverCheck === 'tie') {
+            _winDescription.textContent = 'It\'s a Tie!!';
+        } else if(gameOverCheck) {
+            _winDescription.textContent = player.getName() + ' wins the round!';
+            player.addPoints();
+            _score1Text.textContent = player1.getPoints();
+            _score2Text.textContent = player2.getPoints();
+            // (player === player1) ? _score1Text.textContent++ : _score2Text.textContent++ ;
         }
-        console.log( gameBoard.getArr());
-    }
-
-    // for winning combinaisons, 
-    //write them in a object, 
-    // save (push) the id of player1 and player2 to two arrays
-    // and check if one of an array corresponds to a winning combinaison
-
-    return {checkCell};
-})();
-
-//temp ? create a test gameBoard
-displayDOMController.initGameBoardToDom();
-displayDOMController.displayPlayersNames();
-// playController.play()
-
-
-
+    };
+    return { initGameBoardToDom, displayResult};
+})(document);
 
