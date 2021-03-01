@@ -11,25 +11,29 @@
     <main >
         <section id="home">
             <form id="home-form">
-                <input type="text" name="player-name-1" id="player-name-1" placeholder="Player 1">
-                <label for="human-1">
-                    <input type="radio" name="player-type-1" id="human-1" value="human-1" checked>
-                    Human
-                </label>
-                <Label for="robot-1">
-                    <input type="radio" name="player-type-1" id="robot-1" value="robot-1">
-                    Robot
-                </Label>                
+                <div>
+                    <input type="text" maxlength="13" name="player-name-1" id="player-name-1" placeholder="Player 1">
+                    <label class="radio-inputs" for="human-1">
+                        <input type="radio" name="player-type-1" id="human-1" value="human-1" checked>
+                        Human
+                    </label>
+                    <Label class="radio-inputs" for="robot-1">
+                        <input type="radio" name="player-type-1" id="robot-1" value="robot-1">
+                        Robot
+                    </Label>                
+                </div>
                 
-                <input type="text" name="player-name-2" id="player-name-2" placeholder="Player 2">
-                <label for="human-2">
-                    <input type="radio" name="player-type-2" id="human-2" value="human-2" checked>
-                    Human
-                </label>
-                <Label for="robot-2">
-                    <input type="radio" name="player-type-2" id="robot-2" value="robot-2">
-                    Robot
-                </Label>
+                <div>
+                    <input type="text" maxlength="13" name="player-name-2" id="player-name-2" placeholder="Player 2">
+                    <label class="radio-inputs" for="human-2">
+                        <input type="radio" name="player-type-2" id="human-2" value="human-2" checked>
+                        Human
+                    </label>
+                    <Label class="radio-inputs" for="robot-2">
+                        <input type="radio" name="player-type-2" id="robot-2" value="robot-2">
+                        Robot
+                    </Label>
+                </div>
 
                 <input type="submit" id="start" value="start">
             </form>

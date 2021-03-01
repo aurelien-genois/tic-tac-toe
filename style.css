@@ -8,6 +8,36 @@ html {
     /* for responsive size, just change this font-size in media-query (for ex retina screen) */
     font-size: 62.5%;
 }
+main {
+    font-size: 1.2rem;
+}
+
+#home {
+    margin: 0 auto;
+}
+#home-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem auto;
+    width: 40rem;
+}
+#home-form input[type="text"] {
+    width: 10rem;
+}
+#home-form .radio-inputs {
+    margin: 0 0 0 1rem;
+    font-weight: bold;
+
+}
+#home-form input[type="submit"] {
+    margin: 1rem 0;
+}
+#home-form div {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+}
 
 #game {
     width: 40rem;
@@ -38,6 +68,7 @@ html {
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
+    color: palevioletred;
 }
 
 #restart-button {
