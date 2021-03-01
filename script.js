@@ -1,3 +1,12 @@
+// Todo comment/refactor javascript
+// Todo avoid click when computer play 
+// Todo count the number of tie
+// Todo improve general style
+// Todo show which player turn is on player-name (bold and color....)
+// Todo show hover effect on cell clickable
+// Todo replace X and O by clean cross / circle
+// Todo some animation (sumbol apparition, fade form disapearance, fade gameBoard apparition, ...)
+
 // players factory
 const player = (name, marker) => {
     let _points = 0;
@@ -33,10 +42,6 @@ const gameBoard = (() => {
 
     return { getArr, setCell, reset};
 })();
-
-// TODO module for AI ?
-// TODO if AI, make the click event raises on a random ('.game-cells') 
-// TODO one that works, choose the game-cells with ID according to the best move
 
 // game play logic
 const playController = (() => {
@@ -151,8 +156,8 @@ const displayDOMController = ((doc) => {
     _score2Text.textContent = player2.getPoints();
     _restartButton.addEventListener('click', playController.newRound);
 
-    // TODO homeForm => to an other module ??
     const _homeForm = doc.querySelector('#home-form');
+    const _home = doc.querySelector('#home');
     _homeForm.addEventListener('submit', (e) => {
         e.preventDefault();
         player1.setName(_homeForm.querySelector('#player-name-1').value || 
@@ -172,9 +177,8 @@ const displayDOMController = ((doc) => {
         } 
 
         initGameBoardToDom(); // first init
-
         _game.removeAttribute('hidden');
-        _homeForm.setAttribute('hidden', true);
+        _home.setAttribute('hidden', "");
     });
     
     const _createCell = (id, content, colIndex, rowIndex) => {
