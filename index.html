@@ -8,19 +8,48 @@
 </head>
 <body>
     <h1 id="title">Tic Tac Toe</h1>
-    <main id="game">
-        <div id="score">
-            <p id="player1" class="players"></p>
-            <div id="score-display">
-                <p id="score1" class="scores">9</p>
-                <p>-</p>
-                <p id="score2" class="scores">9</p>
-            </div>
-            <p id="player2" class="players"></p>
-        </div>
-        <div id="game-board">
+    <main >
+        <section id="home">
+            <form id="home-form">
+                <input type="text" name="player-name-1" id="player-name-1" placeholder="Player 1">
+                <label for="human-1">
+                    <input type="radio" name="player-type-1" id="human-1" value="human-1" checked>
+                    Human
+                </label>
+                <Label for="robot-1">
+                    <input type="radio" name="player-type-1" id="robot-1" value="robot-1">
+                    Robot
+                </Label>                
+                
+                <input type="text" name="player-name-2" id="player-name-2" placeholder="Player 2">
+                <label for="human-2">
+                    <input type="radio" name="player-type-2" id="human-2" value="human-2" checked>
+                    Human
+                </label>
+                <Label for="robot-2">
+                    <input type="radio" name="player-type-2" id="robot-2" value="robot-2">
+                    Robot
+                </Label>
 
-        </div>
+                <input type="submit" id="start" value="start">
+            </form>
+        </section>
+        <section id="game">
+            <div id="win-description"></div>
+            <div id="score">
+                <p id="player1" class="players"></p>
+                <div id="score-display">
+                    <p id="score1" class="scores"></p>
+                    <p>-</p>
+                    <p id="score2" class="scores"></p>
+                </div>
+                <p id="player2" class="players"></p>
+            </div>
+            <div id="game-board">
+    
+            </div>
+            <button id="restart-button">Restart</button>
+        </section>
     </main>
     <script src="script.js"></script>
 </body>
