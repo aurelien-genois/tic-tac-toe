@@ -2,12 +2,15 @@
 const player = (name, marker) => {
     let _points = 0;
     const getName = () => name;
+    const setName = (newName) => {
+        name = newName;
+    }
     const getMarker = () => marker;
     const getPoints = () => _points;
     const addPoints = () => {
         _points++;
     };
-    return { getName, getMarker, getPoints, addPoints};
+    return { getName, setName, getMarker, getPoints, addPoints};
 }
 const player1 = player('Player 1', 'X');
 const player2 = player('Player 2', 'O'); // or AI
@@ -26,7 +29,7 @@ const gameBoard = (() => {
     return { getArr, setCell, reset};
 })();
 
-// TODO module for AI
+// TODO module for AI ?
 
 // game play logic
 const playController = (() => {
@@ -83,6 +86,7 @@ const playController = (() => {
 
 // methods for display to the dom
 const displayDOMController = ((doc) => {
+    const _game = doc.querySelector('#game');
     const _gameBoardGrid = doc.querySelector('#game-board');
     const _winDescription = doc.querySelector('#win-description');
     const _score1Text = doc.querySelector('#score1');
@@ -90,12 +94,31 @@ const displayDOMController = ((doc) => {
     const _player1Text = doc.querySelector('#player1');
     const _player2Text = doc.querySelector('#player2');
     const _restartButton = doc.querySelector('#restart-button');
-    // Display name automatically at the initialisation
     _score1Text.textContent = player1.getPoints();
     _score2Text.textContent = player2.getPoints();
-    _player1Text.textContent = player1.getName();
-    _player2Text.textContent = player2.getName();
     _restartButton.addEventListener('click', playController.newRound);
+
+    // homeForm => to an other module ??
+    const _homeForm = doc.querySelector('#home-form');
+    _homeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        player1.setName(_homeForm.querySelector('#player-name-1').value || 
+                        _homeForm.querySelector('#player-name-1').placeholder);
+        player2.setName(_homeForm.querySelector('#player-name-2').value || 
+                        _homeForm.querySelector('#player-name-2').placeholder);
+        _player1Text.textContent = player1.getName();
+        _player2Text.textContent = player2.getName();
+        
+        if(_homeForm.querySelector('#robot-1').checked) {
+            console.log('1 is AI'); // define player1 as a AI
+        }
+        if(_homeForm.querySelector('#robot-2').checked) {
+            console.log('2 is AI'); // define player2 as a AI
+        } 
+        
+        _game.removeAttribute('hidden');
+        _homeForm.setAttribute('hidden', true);
+    });
     
     const _createCell = (id, content, colIndex, rowIndex) => {
         let cell = doc.createElement('p'); 
