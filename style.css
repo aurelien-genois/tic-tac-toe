@@ -21,6 +21,8 @@ html {
 
 #score {
     display: flex;
+    margin: 0 auto 1rem auto;
+    width: 30rem;
     justify-content: space-between;
     font-size: 1.5rem;
 }
@@ -30,19 +32,52 @@ html {
     justify-content: center;
 }
 
+#win-description {
+    height: 3rem;
+    margin: 1rem auto 0.5rem auto;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#restart-button {
+    display: block;
+    width: 10rem;
+    margin: 1rem auto;
+}
+
 #game-board {
     height: 30rem;
     width: 30rem;
-    background-color: papayawhip;
+    background-color: rgb(33, 37, 99);
     display: grid;
+    padding: 0.3rem;
+    grid-column-gap: 0.3rem;
+    grid-row-gap: 0.3rem;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
 }
 
 .game-cells {
     display: flex;
-    border: 0 solid green;
+    background-color: rgb(212, 213, 236);
+    /* border: 0 solid green; */
     justify-content: center;
     align-items: center;
     font-size: 3rem;
 }
+/* .game-cells:nth-child(1) {
+    border-width: 0 0.2rem 0.2rem 0;
+}
+.game-cells:nth-child(3) {
+    border-width: 0 0 0.2rem 0.2rem;
+}
+.game-cells:nth-child(5) {
+    outline: 0.2rem solid green;
+}
+.game-cells:nth-child(7) {
+    border-width: 0.2rem 0.2rem 0 0;
+}
+.game-cells:nth-child(9) {
+    border-width: 0.2rem 0 0 0.2rem;
+} */
