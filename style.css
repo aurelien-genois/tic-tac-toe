@@ -2,7 +2,6 @@
     padding: 0;
     margin: 0;
 }
-
 html {
     /* 1rem = 16px, so when define at 62.5% 1rem = 10 px */
     /* for responsive size, just change this font-size in media-query (for ex retina screen) */
@@ -12,6 +11,7 @@ main {
     font-size: 1.2rem;
 }
 
+/* Home Form */
 #home {
     margin: 0 auto;
 }
@@ -39,16 +39,15 @@ main {
     align-items: center;
 }
 
+/* Game UI */
 #game {
     width: 40rem;
     margin: 0 auto;
 }
-
-#title, #score, #game-board {
+#title, #score, #game-board-zone {
     margin: 0 auto;
     text-align: center;
 }
-
 #score {
     display: flex;
     margin: 0 auto 1rem auto;
@@ -56,12 +55,10 @@ main {
     justify-content: space-between;
     font-size: 1.5rem;
 }
-
 #score-display {
     display: flex;
     justify-content: center;
 }
-
 #win-description {
     height: 3rem;
     margin: 1rem auto 0.5rem auto;
@@ -70,45 +67,38 @@ main {
     font-weight: bold;
     color: palevioletred;
 }
-
 #restart-button {
     display: block;
     width: 10rem;
     margin: 1rem auto;
 }
 
-#game-board {
+/* Game Board */
+#game-board-zone, #game-board, #game-board-mask {
     height: 30rem;
     width: 30rem;
+}
+#game-board-zone {
     background-color: rgb(33, 37, 99);
-    display: grid;
     padding: 0.3rem;
+    position: relative;
+}
+#game-board {
+    display: grid;
     grid-column-gap: 0.3rem;
     grid-row-gap: 0.3rem;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-}
 
+}
+#game-board-mask {
+    visibility: collapse;
+    position: absolute;
+}
 .game-cells {
     display: flex;
     background-color: rgb(212, 213, 236);
-    /* border: 0 solid green; */
     justify-content: center;
     align-items: center;
     font-size: 3rem;
 }
-/* .game-cells:nth-child(1) {
-    border-width: 0 0.2rem 0.2rem 0;
-}
-.game-cells:nth-child(3) {
-    border-width: 0 0 0.2rem 0.2rem;
-}
-.game-cells:nth-child(5) {
-    outline: 0.2rem solid green;
-}
-.game-cells:nth-child(7) {
-    border-width: 0.2rem 0.2rem 0 0;
-}
-.game-cells:nth-child(9) {
-    border-width: 0.2rem 0 0 0.2rem;
-} */

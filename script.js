@@ -90,7 +90,9 @@ const playController = (() => {
                 _updateCell(cell, cellId, player1, _player1moves);
                 _precPlayer = player1.getName();
                 if(player2.getAi()) { // if other player ai, play aiPlay()
+                    displayDOMController.getGameBoardMask().style.visibility = 'visible';
                     setTimeout(function() {
+                        displayDOMController.getGameBoardMask().style.visibility = 'collapse';
                         aiPlay(player2);
                         }, 500);
                 }    
@@ -99,7 +101,9 @@ const playController = (() => {
                 _updateCell(cell, cellId, player2, _player2moves);
                 _precPlayer = player2.getName();
                 if(player1.getAi()) { // if other player ai, play aiPlay()
+                    displayDOMController.getGameBoardMask().style.visibility = 'visible';
                     setTimeout(function() {
+                        displayDOMController.getGameBoardMask().style.visibility = 'collapse';
                         aiPlay(player1);
                         }, 500);
                 }    
@@ -211,6 +215,7 @@ const displayDOMController = ((doc) => {
         }
     };
     const getGameBoardCells = () => [..._gameBoardGrid.querySelectorAll('.game-cells')];
-    return { initGameBoardToDom, displayRoundResult, getGameBoardCells};
+    const getGameBoardMask = () => doc.querySelector('#game-board-mask');
+    return { initGameBoardToDom, displayRoundResult, getGameBoardCells, getGameBoardMask};
 })(document);
 
