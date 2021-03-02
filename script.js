@@ -1,8 +1,6 @@
-// Todo avoid click when computer play 
-// Todo count the number of tie
+// // Todo count the number of tie
 // Todo improve general style
-// Todo show which player turn is on player-name (bold and color....)
-// Todo show hover effect on cell clickable
+// // Todo show hover effect on cell clickable
 // Todo replace X and O by clean cross / circle
 // Todo some animation (sumbol apparition, fade form disapearance, fade gameBoard apparition, ...)
 
@@ -75,7 +73,7 @@ const playController = (() => {
         if(gameBoard.getArr().every(x => x !== "") && !_isGameOver) {
             _isGameOver = 'tie'; // truthy value
         }
-        displayDOMController.displayRoundResult(_isGameOver, currentPlayer);
+        displayDOMController.displayResult(_isGameOver, currentPlayer);
       };
     const _updateCell = (cell, cellId, currentPlayer, currentPlayerMoves) => {
         cell.textContent = currentPlayer.getMarker();
@@ -184,6 +182,10 @@ const displayDOMController = ((doc) => {
         let cellId = 0;
         let cellColl = 1;
         let cellRow = 1;
+        if([..._player2Text.classList].includes('current-player-name')) {
+            _player1Text.classList.toggle('current-player-name');
+            _player2Text.classList.toggle('current-player-name');    
+        }
         _winDescription.textContent = '';
         while (_gameBoardGrid.firstChild) {    
             _gameBoardGrid.removeChild(_gameBoardGrid.firstChild);
@@ -204,7 +206,7 @@ const displayDOMController = ((doc) => {
             playController.aiPlay(player1);
         }
     };
-    const displayRoundResult = (gameOverCheck, winnerPlayer) => {
+    const displayResult = (gameOverCheck, winnerPlayer) => {
         if(gameOverCheck === 'tie') {
             _winDescription.textContent = 'It\'s a Tie!!';
         } else if(gameOverCheck) {
@@ -212,10 +214,13 @@ const displayDOMController = ((doc) => {
             winnerPlayer.addPoints();
             _score1Text.textContent = player1.getPoints();
             _score2Text.textContent = player2.getPoints();
+        } else { // if game is not over, hightlight the new current player
+            _player1Text.classList.toggle('current-player-name');
+            _player2Text.classList.toggle('current-player-name');    
         }
     };
     const getGameBoardCells = () => [..._gameBoardGrid.querySelectorAll('.game-cells')];
     const getGameBoardMask = () => doc.querySelector('#game-board-mask');
-    return { initGameBoardToDom, displayRoundResult, getGameBoardCells, getGameBoardMask};
+    return { initGameBoardToDom, displayResult, getGameBoardCells, getGameBoardMask};
 })(document);
 
