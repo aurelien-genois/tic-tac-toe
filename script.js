@@ -99,28 +99,26 @@ const playController = (() => {
   const _playAMove = (cell, cellId) => {
     switch (_precPlayer) {
       case 'none':
-      case player2.getName(): // player1 turn
+      case player2.getMarker(): // player1 turn
         _setAMove(cell, cellId, player1, _player1moves);
-        _precPlayer = player1.getName();
+        _precPlayer = player1.getMarker();
         if (player2.isAi()) {
           // if other player ai, play aiPlay()
-          displayDOMController.getGameBoardMask().style.visibility = 'visible';
+          displayDOMController.toggleGameBoardMask();
           setTimeout(function () {
-            displayDOMController.getGameBoardMask().style.visibility =
-              'collapse';
+            displayDOMController.toggleGameBoardMask();
             aiPlay();
           }, 500);
         }
         break;
-      case player1.getName(): // player2 turn
+      case player1.getMarker(): // player2 turn
         _setAMove(cell, cellId, player2, _player2moves);
-        _precPlayer = player2.getName();
+        _precPlayer = player2.getMarker();
         if (player1.isAi()) {
           // if other player ai, play aiPlay()
-          displayDOMController.getGameBoardMask().style.visibility = 'visible';
+          displayDOMController.toggleGameBoardMask();
           setTimeout(function () {
-            displayDOMController.getGameBoardMask().style.visibility =
-              'collapse';
+            displayDOMController.toggleGameBoardMask();
             aiPlay();
           }, 500);
         }
@@ -129,7 +127,11 @@ const playController = (() => {
   };
 
   const humanPlay = (e) => {
-    if (!e.target.textContent && !_isGameOver) {
+    if (
+      !e.target.classList.contains('fa-sun') &&
+      !e.target.classList.contains('fa-moon') &&
+      !_isGameOver
+    ) {
       // if cell empty and game not over
       _playAMove(e.target, e.target.id);
     }
@@ -159,6 +161,7 @@ const playController = (() => {
 // DOM display module
 const displayDOMController = ((doc) => {
   const _game = doc.querySelector('#game');
+  const _gameInfos = doc.querySelector('#game-infos');
   const _gameBoardGrid = doc.querySelector('#game-board');
   const _winDescription = doc.querySelector('#win-description');
   const _score1Text = doc.querySelector('#score1');
@@ -166,6 +169,7 @@ const displayDOMController = ((doc) => {
   const _player1Text = doc.querySelector('#player1');
   const _player2Text = doc.querySelector('#player2');
   const _restartButton = doc.querySelector('#restart-button');
+  const _gameBoardMask = doc.querySelector('#game-board-mask');
   _restartButton.addEventListener('click', playController.newRound);
 
   // home form
@@ -186,14 +190,21 @@ const displayDOMController = ((doc) => {
     if (_homeForm.querySelector('#robot-1').checked) {
       console.log('1 is AI');
       player1.setAi(); // define player1 as a AI
+      _gameInfos.querySelector('#player1-display').classList.add('robot-color');
+    } else {
+      _gameInfos.querySelector('#player1-display').classList.add('human-color');
     }
     if (_homeForm.querySelector('#robot-2').checked) {
       console.log('2 is AI');
       player2.setAi(); // define player2 as a AI
+      _gameInfos.querySelector('#player2-display').classList.add('robot-color');
+    } else {
+      _gameInfos.querySelector('#player2-display').classList.add('human-color');
     }
     initGameBoardToDom(); // first init
-    _game.removeAttribute('hidden');
-    _home.setAttribute('hidden', '');
+    _gameBoardMask.querySelector('p').style.display = 'none';
+    _home.style.display = 'none';
+    _gameInfos.style.display = 'block';
   });
 
   const _createCell = (id, colIndex, rowIndex) => {
@@ -234,19 +245,25 @@ const displayDOMController = ((doc) => {
     if (player1.isAi()) {
       playController.aiPlay(player1);
     }
-    _restartButton.disabled = true;
+    toggleGameBoardMask(); // remove the mask
+    _restartButton.style.display = 'none';
+    _gameBoardMask.style.cursor = 'wait';
   };
 
   const displayResult = (gameOverCheck, winnerPlayer) => {
     if (gameOverCheck === 'tie') {
+      _gameBoardMask.style.cursor = 'default';
       _winDescription.textContent = "It's a Tie!!";
-      _restartButton.disabled = false;
+      _restartButton.style.display = 'block';
+      toggleGameBoardMask();
     } else if (gameOverCheck) {
+      _gameBoardMask.style.cursor = 'default';
       _winDescription.textContent = winnerPlayer.getName() + ' wins the round!';
       winnerPlayer.addPoints();
       _score1Text.textContent = player1.getPoints();
       _score2Text.textContent = player2.getPoints();
-      _restartButton.disabled = false;
+      _restartButton.style.display = 'block';
+      toggleGameBoardMask();
     } else {
       // if game is not over, hightlight the new current player
       _player1Text.classList.toggle('current-player-name');
@@ -257,10 +274,10 @@ const displayDOMController = ((doc) => {
   const displayMove = (thisCell, marker) => {
     switch (marker) {
       case 'X':
-        thisCell.classList.add('fa-times');
+        thisCell.classList.add('fa-sun');
         break;
       case 'O':
-        thisCell.classList.add('fa-circle');
+        thisCell.classList.add('fa-moon');
         break;
     }
   };
@@ -269,12 +286,15 @@ const displayDOMController = ((doc) => {
     ..._gameBoardGrid.querySelectorAll('.game-cells'),
   ];
 
-  const getGameBoardMask = () => doc.querySelector('#game-board-mask');
+  const toggleGameBoardMask = () => {
+    _gameBoardMask.classList.toggle('visible');
+  };
+
   return {
     initGameBoardToDom,
     displayResult,
     getGameBoardCells,
     displayMove,
-    getGameBoardMask,
+    toggleGameBoardMask,
   };
 })(document);

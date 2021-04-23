@@ -9,92 +9,128 @@
       integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN"
       crossorigin="anonymous"
     />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <h1 id="title">Tic Tac Toe</h1>
+    <h1 id="title">
+      <span class="human-color">Tic</span> Tac
+      <span class="robot-color">Toe</span>
+    </h1>
     <main>
       <section id="home">
         <form id="home-form">
-          <div>
-            <p class="symbol">X</p>
-            <input
-              type="text"
-              maxlength="13"
-              name="player-name-1"
-              id="player-name-1"
-              placeholder="Player 1"
-            />
-            <label class="radio-inputs" for="human-1">
+          <div class="player-info">
+            <div>
+              <p class="symbol fa fa-sun"></p>
               <input
-                type="radio"
-                name="player-type-1"
-                id="human-1"
-                value="human-1"
-                checked
+                type="text"
+                maxlength="8"
+                name="player-name-1"
+                id="player-name-1"
+                placeholder="Player 1"
               />
-              Human
-            </label>
-            <label class="radio-inputs" for="robot-1">
-              <input
-                type="radio"
-                name="player-type-1"
-                id="robot-1"
-                value="robot-1"
-              />
-              Robot
-            </label>
+            </div>
+            <div>
+              <label class="radio-inputs human-color" for="human-1">
+                <input
+                  type="radio"
+                  name="player-type-1"
+                  id="human-1"
+                  value="human-1"
+                  checked
+                />
+                Human
+              </label>
+              <label class="radio-inputs robot-color" for="robot-1">
+                <input
+                  type="radio"
+                  name="player-type-1"
+                  id="robot-1"
+                  value="robot-1"
+                />
+                Robot
+              </label>
+            </div>
           </div>
 
-          <div>
-            <p class="symbol">O</p>
-            <input
-              type="text"
-              maxlength="13"
-              name="player-name-2"
-              id="player-name-2"
-              placeholder="Player 2"
-            />
-            <label class="radio-inputs" for="human-2">
-              <input
-                type="radio"
-                name="player-type-2"
-                id="human-2"
-                value="human-2"
-                checked
-              />
-              Human
-            </label>
-            <label class="radio-inputs" for="robot-2">
-              <input
-                type="radio"
-                name="player-type-2"
-                id="robot-2"
-                value="robot-2"
-              />
-              Robot
-            </label>
-          </div>
+          <input type="submit" id="start" value="Start" />
 
-          <input type="submit" id="start" value="start" />
+          <div class="player-info">
+            <div>
+              <p class="symbol fa fa-moon"></p>
+              <input
+                type="text"
+                maxlength="8"
+                name="player-name-2"
+                id="player-name-2"
+                placeholder="Player 2"
+              />
+            </div>
+            <div>
+              <label class="radio-inputs human-color" for="human-2">
+                <input
+                  type="radio"
+                  name="player-type-2"
+                  id="human-2"
+                  value="human-2"
+                  checked
+                />
+                Human
+              </label>
+              <label class="radio-inputs robot-color" for="robot-2">
+                <input
+                  type="radio"
+                  name="player-type-2"
+                  id="robot-2"
+                  value="robot-2"
+                />
+                Robot
+              </label>
+            </div>
+          </div>
         </form>
       </section>
-      <section id="game" hidden>
-        <div id="win-description"></div>
-        <button id="restart-button" disabled>New Round</button>
-        <div id="score">
-          <p id="player1" class="players current-player-name"></p>
-          <div id="score-display">
-            <p id="score1" class="scores">0</p>
-            <p>-</p>
-            <p id="score2" class="scores">0</p>
+      <section id="game">
+        <div id="game-infos">
+          <div id="win-description"></div>
+          <div id="score">
+            <div class="player-name-display" id="player1-display">
+              <p class="symbol fa fa-sun"></p>
+              <p id="player1" class="players current-player-name"></p>
+            </div>
+            <div id="score-display">
+              <p id="score1" class="scores">0</p>
+              <p>-</p>
+              <p id="score2" class="scores">0</p>
+            </div>
+            <div class="player-name-display" id="player2-display">
+              <p id="player2" class="players"></p>
+              <p class="symbol fa fa-moon"></p>
+            </div>
           </div>
-          <p id="player2" class="players"></p>
         </div>
         <div id="game-board-zone">
-          <div id="game-board-mask"></div>
-          <div id="game-board"></div>
+          <div id="game-board-mask" class="visible">
+            <button id="restart-button">New Round</button>
+            <p>Start the game for playing</p>
+          </div>
+          <div id="game-board">
+            <p class="game-cells fa" id="0" style="grid-area: 1 / 1"></p>
+            <p class="game-cells fa" id="1" style="grid-area: 1 / 2"></p>
+            <p class="game-cells fa" id="2" style="grid-area: 1 / 3"></p>
+            <p class="game-cells fa" id="3" style="grid-area: 2 / 1"></p>
+            <p class="game-cells fa" id="4" style="grid-area: 2 / 2"></p>
+            <p class="game-cells fa" id="5" style="grid-area: 2 / 3"></p>
+            <p class="game-cells fa" id="6" style="grid-area: 3 / 1"></p>
+            <p class="game-cells fa" id="7" style="grid-area: 3 / 2"></p>
+            <p class="game-cells fa" id="8" style="grid-area: 3 / 3"></p>
+          </div>
         </div>
       </section>
     </main>
