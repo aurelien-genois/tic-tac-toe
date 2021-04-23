@@ -1,65 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Tic Tac Toe</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1 id="title">Tic Tac Toe</h1>
-    <main >
-        <section id="home">
-            <form id="home-form">
-                <div>
-                    <p class="symbol">X</p>
-                    <input type="text" maxlength="13" name="player-name-1" id="player-name-1" placeholder="Player 1">
-                    <label class="radio-inputs" for="human-1">
-                        <input type="radio" name="player-type-1" id="human-1" value="human-1" checked>
-                        Human
-                    </label>
-                    <Label class="radio-inputs" for="robot-1">
-                        <input type="radio" name="player-type-1" id="robot-1" value="robot-1">
-                        Robot
-                    </Label>                
-                </div>
-                
-                <div>
-                    <p class="symbol">O</p>
-                    <input type="text" maxlength="13" name="player-name-2" id="player-name-2" placeholder="Player 2">
-                    <label class="radio-inputs" for="human-2">
-                        <input type="radio" name="player-type-2" id="human-2" value="human-2" checked>
-                        Human
-                    </label>
-                    <Label class="radio-inputs" for="robot-2">
-                        <input type="radio" name="player-type-2" id="robot-2" value="robot-2">
-                        Robot
-                    </Label>
-                </div>
+    <main>
+      <section id="home">
+        <form id="home-form">
+          <div>
+            <p class="symbol">X</p>
+            <input
+              type="text"
+              maxlength="13"
+              name="player-name-1"
+              id="player-name-1"
+              placeholder="Player 1"
+            />
+            <label class="radio-inputs" for="human-1">
+              <input
+                type="radio"
+                name="player-type-1"
+                id="human-1"
+                value="human-1"
+                checked
+              />
+              Human
+            </label>
+            <label class="radio-inputs" for="robot-1">
+              <input
+                type="radio"
+                name="player-type-1"
+                id="robot-1"
+                value="robot-1"
+              />
+              Robot
+            </label>
+          </div>
 
-                <input type="submit" id="start" value="start">
-            </form>
-        </section>
-        <section id="game" hidden>
-            <div id="win-description"></div>
-            <div id="score">
-                <p id="player1" class="players current-player-name"></p>
-                <div id="score-display">
-                    <p id="score1" class="scores">0</p>
-                    <p>-</p>
-                    <p id="score2" class="scores">0</p>
-                </div>
-                <p id="player2" class="players"></p>
-            </div>
-            <div id="game-board-zone">
-                <div id="game-board-mask">
-                </div>
-                <div id="game-board">
-                </div>
-            </div>
-            <button id="restart-button">New Round</button>
-        </section>
+          <div>
+            <p class="symbol">O</p>
+            <input
+              type="text"
+              maxlength="13"
+              name="player-name-2"
+              id="player-name-2"
+              placeholder="Player 2"
+            />
+            <label class="radio-inputs" for="human-2">
+              <input
+                type="radio"
+                name="player-type-2"
+                id="human-2"
+                value="human-2"
+                checked
+              />
+              Human
+            </label>
+            <label class="radio-inputs" for="robot-2">
+              <input
+                type="radio"
+                name="player-type-2"
+                id="robot-2"
+                value="robot-2"
+              />
+              Robot
+            </label>
+          </div>
+
+          <input type="submit" id="start" value="start" />
+        </form>
+      </section>
+      <section id="game" hidden>
+        <div id="win-description"></div>
+        <div id="score">
+          <p id="player1" class="players current-player-name"></p>
+          <div id="score-display">
+            <p id="score1" class="scores">0</p>
+            <p>-</p>
+            <p id="score2" class="scores">0</p>
+          </div>
+          <p id="player2" class="players"></p>
+        </div>
+        <div id="game-board-zone">
+          <div id="game-board-mask"></div>
+          <div id="game-board"></div>
+        </div>
+        <button id="restart-button" disabled>New Round</button>
+      </section>
     </main>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
