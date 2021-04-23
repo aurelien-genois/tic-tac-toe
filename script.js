@@ -80,13 +80,28 @@ const playController = (() => {
 
   const _checkWin = (playerMoves, currentPlayer) => {
     // deep comparison because arr.includes() only works for shallow comparison,
-    _isGameOver = _winConditions.some((cond) =>
-      cond.every((condCell) => playerMoves.includes(condCell)),
-    );
+    let winningCondition = [];
+    _isGameOver = _winConditions.some((cond) => {
+      if (cond.every((condCell) => playerMoves.includes(condCell))) {
+        winningCondition = [...cond];
+        return true;
+      }
+    });
     if (gameBoard.getArr().every((cell) => cell !== '') && !_isGameOver) {
       _isGameOver = 'tie'; // truthy value
     }
-    displayDOMController.displayResult(_isGameOver, currentPlayer);
+    if (_isGameOver) {
+      // if game is over, displayResult
+      currentPlayer.addPoints();
+      displayDOMController.displayResult(
+        _isGameOver,
+        currentPlayer,
+        winningCondition,
+      );
+    } else {
+      // if game is not over, hightlight the new current player
+      displayDOMController.highlightCurrPlayer();
+    }
   };
 
   const _setAMove = (cell, cellId, currentPlayer, currentPlayerMoves) => {
@@ -170,6 +185,7 @@ const displayDOMController = ((doc) => {
   const _player2Text = doc.querySelector('#player2');
   const _restartButton = doc.querySelector('#restart-button');
   const _gameBoardMask = doc.querySelector('#game-board-mask');
+  const _roundResults = doc.querySelector('#round-results');
   _restartButton.addEventListener('click', playController.newRound);
 
   // home form
@@ -250,25 +266,40 @@ const displayDOMController = ((doc) => {
     _gameBoardMask.style.cursor = 'wait';
   };
 
-  const displayResult = (gameOverCheck, winnerPlayer) => {
+  const _populateRoundResults = (winsCellsIds) => {
+    if (_roundResults.childElementCount >= 4) {
+      _roundResults.lastElementChild.style.opacity = 0;
+      _roundResults.lastElementChild.style.marginRight = '-9rem';
+      setTimeout(function () {
+        _roundResults.lastElementChild.remove();
+      }, 1000);
+    }
+    const currGameBoardGrid = _gameBoardGrid.cloneNode(true);
+    currGameBoardGrid.classList.add('round-results-grids');
+    currGameBoardGrid.id = '';
+    winsCellsIds.map((id) => {
+      currGameBoardGrid.childNodes[id].style.color = 'green';
+    });
+    _roundResults.prepend(currGameBoardGrid);
+  };
+
+  const displayResult = (gameOverCheck, winnerPlayer, winingCellsIds) => {
+    toggleGameBoardMask();
+    _gameBoardMask.style.cursor = 'default';
+    _restartButton.style.display = 'block';
     if (gameOverCheck === 'tie') {
-      _gameBoardMask.style.cursor = 'default';
       _winDescription.textContent = "It's a Tie!!";
-      _restartButton.style.display = 'block';
-      toggleGameBoardMask();
-    } else if (gameOverCheck) {
-      _gameBoardMask.style.cursor = 'default';
+    } else {
       _winDescription.textContent = winnerPlayer.getName() + ' wins the round!';
-      winnerPlayer.addPoints();
       _score1Text.textContent = player1.getPoints();
       _score2Text.textContent = player2.getPoints();
-      _restartButton.style.display = 'block';
-      toggleGameBoardMask();
-    } else {
-      // if game is not over, hightlight the new current player
-      _player1Text.classList.toggle('current-player-name');
-      _player2Text.classList.toggle('current-player-name');
     }
+    _populateRoundResults(winingCellsIds);
+  };
+
+  const highlightCurrPlayer = () => {
+    _player1Text.classList.toggle('current-player-name');
+    _player2Text.classList.toggle('current-player-name');
   };
 
   const displayMove = (thisCell, marker) => {
@@ -294,6 +325,7 @@ const displayDOMController = ((doc) => {
     initGameBoardToDom,
     displayResult,
     getGameBoardCells,
+    highlightCurrPlayer,
     displayMove,
     toggleGameBoardMask,
   };

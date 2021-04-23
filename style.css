@@ -176,7 +176,8 @@ button {
   padding: 0.3rem;
   position: relative;
 }
-#game-board {
+#game-board,
+.round-results-grids {
   color: rgb(48, 48, 48);
   display: grid;
   grid-column-gap: 0.3rem;
@@ -227,6 +228,48 @@ button {
 .fa-sun:before,
 .fa-moon:before {
   animation: pop 0.3s cubic-bezier(0.68, 1.45, 0.81, 1.1);
+}
+
+/* round results */
+#round-results {
+  display: flex;
+  width: 40rem;
+  margin: 2rem auto 0 auto;
+}
+@keyframes slide-apparition {
+  from {
+    margin-left: -9rem;
+    opacity: 0;
+  }
+  to {
+    margin-left: 0;
+    opacity: 1;
+  }
+}
+.round-results-grids {
+  animation: slide-apparition 1s ease-in;
+  width: 9rem;
+  height: 9rem;
+  grid-column-gap: 0.09rem;
+  grid-row-gap: 0.09rem;
+  margin: auto 0.5rem;
+  transition: opacity 1s, margin-right 1s;
+}
+.round-results-grids:nth-child(2) {
+  opacity: 0.8;
+}
+.round-results-grids:nth-child(3) {
+  opacity: 0.6;
+}
+.round-results-grids:nth-child(4) {
+  opacity: 0.4;
+}
+.round-results-grids .game-cells {
+  font-size: 1.5rem;
+}
+.round-results-grids .fa-sun:before,
+.round-results-grids .fa-moon:before {
+  animation: none;
 }
 
 /* mobile */
