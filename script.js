@@ -25,20 +25,23 @@ const player = (name, marker) => {
     getMarker,
     getPoints,
     addPoints,
-    getAi: isAi,
+    isAi,
     setAi,
   };
 };
 const player1 = player('Player 1', 'X');
 const player2 = player('Player 2', 'O');
 
-// GameBoard
+// GameBoard module
 const gameBoard = (() => {
   let _arr = ['', '', '', '', '', '', '', '', ''];
+
   const getArr = () => _arr;
+
   const setCell = (cellIndex, cellValue) => {
     _arr[cellIndex] = cellValue;
   };
+
   const reset = () => {
     _arr = ['', '', '', '', '', '', '', '', ''];
   };
@@ -46,7 +49,7 @@ const gameBoard = (() => {
   return { getArr, setCell, reset };
 })();
 
-// game play logic
+// game logic module
 const playController = (() => {
   let _player1moves = [];
   let _player2moves = [];
@@ -62,80 +65,86 @@ const playController = (() => {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  const _getRandomLeftCellId = () => {
-    let leftCellsId = []; // array for Id of empty cells
+
+  const _getRandomEmptyCellId = () => {
+    let emptyCellsId = []; // array for Id of empty cells
     gameBoard.getArr().map((x, i) => {
       if (x == '') {
-        leftCellsId.push(i);
+        emptyCellsId.push(i);
       }
     });
     // random index number among the empty cells array
-    const randomCellId = Math.floor(
-      Math.random() * Math.floor(leftCellsId.length - 1),
-    );
-    return leftCellsId[randomCellId];
+    const randomCellId = Math.floor(Math.random() * (emptyCellsId.length - 1));
+    return emptyCellsId[randomCellId];
   };
-  // deep comparison because arr.includes() only works for shallow comparison,
+
   const _checkWin = (playerMoves, currentPlayer) => {
-    _isGameOver = _winConditions.some((e) =>
-      e.every((o) => playerMoves.includes(o)),
+    // deep comparison because arr.includes() only works for shallow comparison,
+    _isGameOver = _winConditions.some((cond) =>
+      cond.every((condCell) => playerMoves.includes(condCell)),
     );
-    if (gameBoard.getArr().every((x) => x !== '') && !_isGameOver) {
+    if (gameBoard.getArr().every((cell) => cell !== '') && !_isGameOver) {
       _isGameOver = 'tie'; // truthy value
     }
     displayDOMController.displayResult(_isGameOver, currentPlayer);
   };
-  const _updateCell = (cell, cellId, currentPlayer, currentPlayerMoves) => {
+
+  const _setAMove = (cell, cellId, currentPlayer, currentPlayerMoves) => {
     cell.textContent = currentPlayer.getMarker();
+    // ! create a display method for display cross or circle
     gameBoard.setCell(cellId, currentPlayer.getMarker());
     currentPlayerMoves.push(+cellId);
     _checkWin(currentPlayerMoves, currentPlayer);
   };
-  const _playARound = (cell, cellId) => {
+
+  const _playAMove = (cell, cellId) => {
     switch (_precPlayer) {
       case 'none':
       case player2.getName(): // player1 turn
-        _updateCell(cell, cellId, player1, _player1moves);
+        _setAMove(cell, cellId, player1, _player1moves);
         _precPlayer = player1.getName();
-        if (player2.getAi()) {
+        if (player2.isAi()) {
           // if other player ai, play aiPlay()
           displayDOMController.getGameBoardMask().style.visibility = 'visible';
           setTimeout(function () {
             displayDOMController.getGameBoardMask().style.visibility =
               'collapse';
-            aiPlay(player2);
+            aiPlay();
           }, 500);
         }
         break;
       case player1.getName(): // player2 turn
-        _updateCell(cell, cellId, player2, _player2moves);
+        _setAMove(cell, cellId, player2, _player2moves);
         _precPlayer = player2.getName();
-        if (player1.getAi()) {
+        if (player1.isAi()) {
           // if other player ai, play aiPlay()
           displayDOMController.getGameBoardMask().style.visibility = 'visible';
           setTimeout(function () {
             displayDOMController.getGameBoardMask().style.visibility =
               'collapse';
-            aiPlay(player1);
+            aiPlay();
           }, 500);
         }
         break;
     }
   };
+
   const humanPlay = (e) => {
     if (!e.target.textContent && !_isGameOver) {
       // if cell empty and game not over
-      _playARound(e.target, e.target.id);
+      _playAMove(e.target, e.target.id);
     }
   };
+
   const aiPlay = () => {
-    const randomCellId = _getRandomLeftCellId();
+    const randomCellId = _getRandomEmptyCellId();
     const randomCell = displayDOMController.getGameBoardCells()[randomCellId];
     if (randomCellId !== undefined && !_isGameOver) {
       // if cell empty and game not over
-      _playARound(randomCell, randomCellId);
+      _playAMove(randomCell, randomCellId);
     }
   };
+
   const newRound = () => {
     gameBoard.reset();
     _player1moves = [];
@@ -148,7 +157,7 @@ const playController = (() => {
   return { humanPlay, aiPlay, newRound };
 })();
 
-// methods for display to the dom
+// DOM display module
 const displayDOMController = ((doc) => {
   const _game = doc.querySelector('#game');
   const _gameBoardGrid = doc.querySelector('#game-board');
@@ -188,22 +197,23 @@ const displayDOMController = ((doc) => {
     _home.setAttribute('hidden', '');
   });
 
-  const _createCell = (id, content, colIndex, rowIndex) => {
+  const _createCell = (id, colIndex, rowIndex) => {
     let cell = doc.createElement('p');
     cell.classList.add('game-cells');
     cell.setAttribute('id', id);
     cell.style.gridColumn = colIndex;
     cell.style.gridRow = rowIndex;
-    cell.textContent = content;
     return cell;
   };
+
   const initGameBoardToDom = () => {
     let cellId = 0;
     let cellColl = 1;
     let cellRow = 1;
     if ([..._player2Text.classList].includes('current-player-name')) {
-      _player1Text.classList.toggle('current-player-name');
-      _player2Text.classList.toggle('current-player-name');
+      // reset the highlight to the player1Text if stills on the player2Text
+      _player1Text.classList.add('current-player-name');
+      _player2Text.classList.remove('current-player-name');
     }
     _winDescription.textContent = '';
     while (_gameBoardGrid.firstChild) {
@@ -213,19 +223,21 @@ const displayDOMController = ((doc) => {
       switch (xI) {
         case 3:
         case 6:
+          // reset coll & change row at the cell 4th (3) and 7th (6)
           cellColl = 1;
           ++cellRow;
           break;
       }
-      let gameCell = _createCell(cellId++, x, cellColl++, cellRow);
+      let gameCell = _createCell(cellId++, cellColl++, cellRow);
       gameCell.addEventListener('click', playController.humanPlay);
       _gameBoardGrid.appendChild(gameCell);
     });
-    if (player1.getAi()) {
+    if (player1.isAi()) {
       playController.aiPlay(player1);
     }
     _restartButton.disabled = true;
   };
+
   const displayResult = (gameOverCheck, winnerPlayer) => {
     if (gameOverCheck === 'tie') {
       _winDescription.textContent = "It's a Tie!!";
@@ -242,6 +254,7 @@ const displayDOMController = ((doc) => {
       _player2Text.classList.toggle('current-player-name');
     }
   };
+
   const getGameBoardCells = () => [
     ..._gameBoardGrid.querySelectorAll('.game-cells'),
   ];
