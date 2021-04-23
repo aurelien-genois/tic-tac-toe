@@ -91,8 +91,8 @@ const playController = (() => {
       _isGameOver = 'tie'; // truthy value
     }
     if (_isGameOver) {
+      if (_isGameOver !== 'tie') currentPlayer.addPoints();
       // if game is over, displayResult
-      currentPlayer.addPoints();
       displayDOMController.displayResult(
         _isGameOver,
         currentPlayer,
