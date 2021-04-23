@@ -90,8 +90,7 @@ const playController = (() => {
   };
 
   const _setAMove = (cell, cellId, currentPlayer, currentPlayerMoves) => {
-    cell.textContent = currentPlayer.getMarker();
-    // ! create a display method for display cross or circle
+    displayDOMController.displayMove(cell, currentPlayer.getMarker());
     gameBoard.setCell(cellId, currentPlayer.getMarker());
     currentPlayerMoves.push(+cellId);
     _checkWin(currentPlayerMoves, currentPlayer);
@@ -199,7 +198,7 @@ const displayDOMController = ((doc) => {
 
   const _createCell = (id, colIndex, rowIndex) => {
     let cell = doc.createElement('p');
-    cell.classList.add('game-cells');
+    cell.classList.add('game-cells', 'fa');
     cell.setAttribute('id', id);
     cell.style.gridColumn = colIndex;
     cell.style.gridRow = rowIndex;
@@ -255,14 +254,27 @@ const displayDOMController = ((doc) => {
     }
   };
 
+  const displayMove = (thisCell, marker) => {
+    switch (marker) {
+      case 'X':
+        thisCell.classList.add('fa-times');
+        break;
+      case 'O':
+        thisCell.classList.add('fa-circle');
+        break;
+    }
+  };
+
   const getGameBoardCells = () => [
     ..._gameBoardGrid.querySelectorAll('.game-cells'),
   ];
+
   const getGameBoardMask = () => doc.querySelector('#game-board-mask');
   return {
     initGameBoardToDom,
     displayResult,
     getGameBoardCells,
+    displayMove,
     getGameBoardMask,
   };
 })(document);
