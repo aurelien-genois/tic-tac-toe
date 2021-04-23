@@ -10,6 +10,10 @@ html {
   background-image: url('./bg.png');
   font-family: 'Nunito', sans-serif;
 }
+/* prevent the default focus outline on chrome */
+:focus {
+  outline: transparent none 0px;
+}
 main {
   font-size: 1.4rem;
 }
@@ -223,4 +227,11 @@ button {
 .fa-sun:before,
 .fa-moon:before {
   animation: pop 0.3s cubic-bezier(0.68, 1.45, 0.81, 1.1);
+}
+
+/* mobile */
+@media screen and (max-width: 450px) {
+  html {
+    font-size: 2vw;
+  }
 }
